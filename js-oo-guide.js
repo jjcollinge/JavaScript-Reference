@@ -8,8 +8,7 @@
 //Object Fundamentals
 //----------------------------
 
-//Primitive Types
-//----------------------------
+//###### Primitive Types ######
 //Undefined		|	undefined
 //Null			|	null
 //Boolean		|	true
@@ -17,12 +16,10 @@
 //Number		|	3.14159
 //Object		|	{ bar: "baz" }
 
-//Special Objects
-//----------------------------
+//###### Special Objects ######
 //Function 		|	function qux() {...}
 //Array			|	["hoge", 42]
 //RegExp		|	/qiyo/
-
 
 //Objects in JavaScript are collections of key-value pairs.
 //Any key can be used as long as it is a string, each key
@@ -35,6 +32,7 @@
 //	e: 3.14159
 //};
 
+//Note:
 //Primitives are passed by value.
 //Objects are passed by reference.
 
@@ -46,20 +44,30 @@
 //When you define a function, JavaScript creates an
 //object with 3 default properties: name, length and 
 //prototype.
+
 //Methods are just functions defined within an object.
 //This means that the 'this' keyword is available, which
 //references the encapsulating object.
-//CAUTION: the 'this' keyword concerns the encapsulating
+
+//Caution: the 'this' keyword concerns the encapsulating
 //object and not the function itself.
+
 //'using strict' mode will force 'this' to be undefined
 //when it is in the global scope.
 
+//#### Useful Methods ######
+
 //The call() method allows you to set the context ('this' value)
-//and pass the parameters in explicity of a function.
+//and pass the parameters in explicity to a function.
+//func.call(this, arg1, arg2);
+
 //The apply() method allows you to set the context ('this' value)
 //and pass in parameters as an array of a function.
+//func.apply(this, [arg1, arg2]);
+
 //The bind() same as call() except it returns the new bound function
 //instead of invoking the function.
+//var func2 = func.bind(this, arg1, arg2);
 
 //----------------------------
 //Prototypal Inheritance
@@ -78,8 +86,8 @@ child.val = 3.14159;
 //JavaScript will recursively work up the prototype chain
 //looking for a matching function or property.
 
-//Every object you create has the prototype Object.prototype.
-//Every function you create has the prototype Function.prototype.
+//Every object you create has the prototype Object.prototype set by default.
+//Every function you create has the prototype Function.prototypeset by default.
 
 //----------------------------
 //Polymorphism & Method Overriding
@@ -111,6 +119,8 @@ var AnswerPrototype = {
 	}
 };
 
+//#### Instances ######
+
 var lifeAnswer = Object.create(AnswerPrototype);
 lifeAnswer.constrcutor(42);
 lifeAnswer.get();	//42
@@ -119,30 +129,43 @@ var dessertAnswer = Object.create(AnswerPrototype);
 dessertAnswer.constrcutor(3.14159);
 dessertAnswer.get(); //3.14159
 
+//#### Subclasses ######
+
+var FirmishAnswer = Object.create(AnswerPrototype);
+FirmishAnswer.get = function fn2() {
+	return AnswerPrototype.get.call(this) + "!";
+};
+
+var magicAnswer = Object.create(FirmishAnswer);
+magicAnswer.constructor(7);
+magicAnswer.get() //7!
+
 //----------------------------
 //The Classical Model
 //----------------------------
 
 function fun() {
-	//Creating this function, will create a corresponsing fun.prototype object
+	//Creating this function, will create a corresponding fun.prototype object
 	//The fun.prototype has a constructor property which points back to this
 	//function.	
 };
 
-//This will also create a AnswerPrototypeClassical.prototype which constructor
+//This will also create a Answer.prototype which constructor
 //property will point back to this object.
 function Answer(value) {
 	this._val = value;
-}
+};
 
+//Automatically generated...
 //function Answer.prototype() {
 //	this.constructor = Answer;
-//}
+//};
 
 Answer.prototype.get = function fn1() {
 	return this._val;	
 };
 
+// new instance's prototype property will point to Answer.prototype
 var lifeAnswer = new Answer(42);
 lifeAnswer.get();	//42
 
@@ -152,7 +175,7 @@ dessertAnswer.get();	//3.14159
 //Sub-classes
 function FirmAnswer(value) {
 	Answer.call(this, value);
-}
+};
 
 //This is not needed, we need the prototype to point to the Answer.prototype
 //function FirmAnswer.prototype() {
